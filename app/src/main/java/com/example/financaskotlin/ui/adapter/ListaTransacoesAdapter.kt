@@ -1,12 +1,16 @@
 package com.example.financaskotlin.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.example.financaskotlin.R
-import com.example.financaskotlin.extension.formataToBR
+import com.example.financaskotlin.extension.moedaBr
+import com.example.financaskotlin.extension.dataBr
+import com.example.financaskotlin.model.Tipo
 import com.example.financaskotlin.model.Transacao
 import kotlinx.android.synthetic.main.transacao_item.view.*
 
@@ -15,6 +19,7 @@ class ListaTransacoesAdapter(
     private val context: Context
 ) : BaseAdapter() {
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val viewCreate = LayoutInflater.from(context).inflate(
             R.layout.transacao_item,
@@ -23,9 +28,23 @@ class ListaTransacoesAdapter(
         )
 
         val transacao = transacoes[position]
-        viewCreate.transacao_valor.text = transacao.valor.toString()
+
+        when {
+            transacao.tipo == Tipo.receita -> {
+                viewCreate.transacao_valor.setTextColor(ContextCompat.getColor(context, R.color.receita))
+                viewCreate.transacao_icone.setBackgroundResource(R.drawable.icone_transacao_item_receita)
+            }
+            transacao.tipo == Tipo.despesa -> {
+                viewCreate.transacao_valor.setTextColor(ContextCompat.getColor(context, R.color.despesa))
+                viewCreate.transacao_icone.setBackgroundResource(R.drawable.icone_transacao_item_despesa)
+            }
+            else -> viewCreate.transacao_valor.setTextColor(ContextCompat.getColor(context, R.color.indefinida))
+        }
+
+
+        viewCreate.transacao_valor.text = transacao.valor.moedaBr()
         viewCreate.transacao_categoria.text = transacao.categoria
-        viewCreate.transacao_data.text = transacao.data.formataToBR()
+        viewCreate.transacao_data.text = transacao.data.dataBr()
 
         return viewCreate
     }
