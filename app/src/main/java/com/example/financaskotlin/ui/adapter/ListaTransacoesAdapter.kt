@@ -7,9 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+
 import com.example.financaskotlin.R
-import com.example.financaskotlin.extension.moedaBr
 import com.example.financaskotlin.extension.dataBr
+import com.example.financaskotlin.extension.limitaString
+import com.example.financaskotlin.extension.moedaBr
+
 import com.example.financaskotlin.model.Tipo
 import com.example.financaskotlin.model.Transacao
 import kotlinx.android.synthetic.main.transacao_item.view.*
@@ -18,6 +21,8 @@ class ListaTransacoesAdapter(
     private val transacoes: List<Transacao>,
     private val context: Context
 ) : BaseAdapter() {
+
+    private val limiteDaString = 14;
 
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -41,9 +46,8 @@ class ListaTransacoesAdapter(
             else -> viewCreate.transacao_valor.setTextColor(ContextCompat.getColor(context, R.color.indefinida))
         }
 
-
         viewCreate.transacao_valor.text = transacao.valor.moedaBr()
-        viewCreate.transacao_categoria.text = transacao.categoria
+        viewCreate.transacao_categoria.text = transacao.categoria.limitaString(limiteDaString)
         viewCreate.transacao_data.text = transacao.data.dataBr()
 
         return viewCreate
