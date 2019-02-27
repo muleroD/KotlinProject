@@ -26,6 +26,7 @@ class ListaTransacoesAdapter(
 
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+
         val viewCreate = LayoutInflater.from(context).inflate(
             R.layout.transacao_item,
             parent,
@@ -34,6 +35,16 @@ class ListaTransacoesAdapter(
 
         val transacao = transacoes[position]
 
+        designView(transacao, viewCreate)
+
+        viewCreate.transacao_valor.text = transacao.valor.moedaBr()
+        viewCreate.transacao_categoria.text = transacao.categoria.limitaString(limiteDaString)
+        viewCreate.transacao_data.text = transacao.data.dataBr()
+
+        return viewCreate
+    }
+
+    private fun designView(transacao: Transacao, viewCreate: View) {
         when {
             transacao.tipo == Tipo.receita -> {
                 viewCreate.transacao_valor.setTextColor(ContextCompat.getColor(context, R.color.receita))
@@ -45,12 +56,6 @@ class ListaTransacoesAdapter(
             }
             else -> viewCreate.transacao_valor.setTextColor(ContextCompat.getColor(context, R.color.indefinida))
         }
-
-        viewCreate.transacao_valor.text = transacao.valor.moedaBr()
-        viewCreate.transacao_categoria.text = transacao.categoria.limitaString(limiteDaString)
-        viewCreate.transacao_data.text = transacao.data.dataBr()
-
-        return viewCreate
     }
 
     override fun getItem(position: Int): Transacao {
